@@ -6,42 +6,49 @@ using UnityEngine;
 public class ARPlayerController : MonoBehaviour
 {
     [SerializeField] GameObject Cube;
+    [SerializeField] GameObject Sphere;
     [SerializeField] Camera arCamera;
     private GestureDetector gestureDetector;
-    private bool canInstantiate;
+    private bool canInstantiateCube;
     [SerializeField] float Cooldown = 2f;
     void Start()
     {
-        canInstantiate = true;
+        canInstantiateCube = true;
         gestureDetector = GetComponent<GestureDetector>();
     }
 
     void Update()
     {
-        if(gestureDetector.isPinching && canInstantiate)
+        if(gestureDetector.isPinching && canInstantiateCube)
         {
            StartCoroutine(CreateCube()); 
         }
         if(gestureDetector.SpecialGesture)
         {
-            StartCoroutine(CreateCube());
+            StartCoroutine(CreateSphere());
         }
         
     }
 
-    public void SpecialAttack()
-    {
-        
-        
-    }
 
     IEnumerator CreateCube()
     {
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f,0.5f,0f));
-        canInstantiate=false;
+        canInstantiateCube=false;
         GameObject spawnedCube = Instantiate(Cube, ray.origin, arCamera.transform.rotation);
         spawnedCube.GetComponentInChildren<Rigidbody>().velocity = ray.direction*10f;
         yield return new WaitForSeconds(Cooldown);
-        canInstantiate=true;
+        canInstantiateCube=true;
     }
+
+    IEnumerator CreateSphere()
+    {
+        gestureDetector.SpecialGesture=false;
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f,0.5f,0f));
+        GameObject spawnedSphere = Instantiate(Sphere, ray.origin, arCamera.transform.rotation);
+        spawnedSphere.GetComponent<Rigidbody>().velocity=ray.direction*10f;
+        yield return new WaitForSeconds(Cooldown);
+    }
+
+
 }

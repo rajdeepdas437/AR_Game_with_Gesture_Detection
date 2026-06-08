@@ -17,6 +17,9 @@ public class GestureDetector : MonoBehaviour
     private float stateCounter;
     private bool startTimer=false;
     public bool SpecialGesture;
+    private bool canDoSpecialAttack=true;
+    [SerializeField] float SpecialAttakCooldown=5f;
+    private float SpecialAttackTimer;
 
     public void Pinching(HandLandmarkerResult result)
     {
@@ -65,7 +68,7 @@ public class GestureDetector : MonoBehaviour
         hand.landmarks[16].y > hand.landmarks[14].y &&
         hand.landmarks[20].y > hand.landmarks[18].y;
 
-        if(stateCounter>0)
+        if(stateCounter>0 && canDoSpecialAttack)
         {
             switch(gestureSequence)
             {
@@ -73,9 +76,8 @@ public class GestureDetector : MonoBehaviour
 
                     if(isPalmOpen)
                     {
-                        SpecialGesture=false;
+                        startTimer=true;          //start timer for whole sequence
                         gestureSequence = GestureSequence.WaitingForClose;
-                        startTimer=true;
                         Debug.Log("Open Palm detected");
                     }
 
@@ -95,16 +97,17 @@ public class GestureDetector : MonoBehaviour
 
                     if(isPalmOpen)
                     {
+                        SpecialGesture=true;     //instantiate sphere
+                        startTimer=false;        //stop the timer
+                        canDoSpecialAttack=false;         //start cooldown
                         gestureSequence = GestureSequence.WaitingForOpen;
-                        SpecialGesture=true;
-                        startTimer=false;
                         Debug.Log("Gesture sequence complete");
                     }
 
                     break;    
             }
         }
-        else
+        if(stateCounter<=0)
         {
             gestureSequence = GestureSequence.WaitingForOpen;
             Debug.Log("Time out!");
@@ -114,19 +117,22 @@ public class GestureDetector : MonoBehaviour
 
     void Update()
     {
+        //Manage sequence timer
         if(!startTimer)
         {
             stateCounter = stateTimer;
         }
         else stateCounter -= Time.deltaTime;
-    }
 
-    IEnumerator SpecialGestureSequence()
-    {
-        Debug.Log("Coroutine started!");
-        
-        yield return new WaitForSeconds(2f);
-        SpecialGesture=false;
+        //Manage cooldown timer
+        if(!canDoSpecialAttack)
+        {
+            SpecialAttackTimer-=Time.deltaTime;
+            if(SpecialAttackTimer<=0)
+            {
+                canDoSpecialAttack=true;
+            }
+        }
+        else SpecialAttackTimer = SpecialAttakCooldown;
     }
-    
 }
