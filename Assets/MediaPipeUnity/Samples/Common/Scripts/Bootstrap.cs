@@ -87,6 +87,7 @@ namespace Mediapipe.Unity.Sample
       ImageSourceProvider.Switch(_appSettings.defaultImageSource);
 
       isFinished = true;
+ 
     }
 
     private void DecideInferenceMode()

@@ -17,6 +17,19 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     //Custom variables -
     [SerializeField] GestureDetector gestureDetector;
 
+    private void Awake()
+    {
+      Debug.Log("[GESTURE] GameHandTracker is awake");
+    }
+
+    private void Update()
+    {
+      if(Time.frameCount==200)
+      {
+        Debug.Log("[GESTURE] GameHandTracker still running");
+      }
+    }
+
     public override void Stop()
     {
       base.Stop();
@@ -26,6 +39,8 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
     protected override IEnumerator Run()
     {
+      Debug.Log("[GESTURE] Run() Started");
+
       Debug.Log($"Delegate = {config.Delegate}");
       Debug.Log($"Image Read Mode = {config.ImageReadMode}");
       Debug.Log($"Running Mode = {config.RunningMode}");
@@ -70,6 +85,8 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
       // NOTE: we can share the GL context of the render thread with MediaPipe (for now, only on Android)
       var canUseGpuImage = SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES3 && GpuManager.GpuResources != null;
       using var glContext = canUseGpuImage ? GpuManager.GetGlContext() : null;
+
+      Debug.Log("[GESTURE] About to enter detection loop");
 
       while (true)
       {
@@ -143,6 +160,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
             }
             break;
           case Tasks.Vision.Core.RunningMode.LIVE_STREAM:
+            Debug.Log("[GESTURE] Sending frames to mediapipe");
             taskApi.DetectAsync(image, GetCurrentTimestampMillisec(), imageProcessingOptions);
             break;
         }
@@ -160,6 +178,17 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
     private void OnHandLandmarkDetectionOutput(HandLandmarkerResult result, Image image, long timestamp)
     {
+      if (result.handLandmarks == null)
+      {
+          Debug.Log("[GESTURE] handLandmarks is NULL");
+      }
+      else
+      {
+          Debug.Log("[GESTURE] handLandmarks count = " + result.handLandmarks.Count);
+      }
+
+      Debug.Log($"[GESTURE] Image size = {image.Width()} x {image.Height()}");
+      
       DetectGestures(result);
       _handLandmarkerResultAnnotationController.DrawLater(result);
     }

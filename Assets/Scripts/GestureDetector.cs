@@ -21,6 +21,11 @@ public class GestureDetector : MonoBehaviour
     [SerializeField] float SpecialAttakCooldown=5f;
     private float SpecialAttackTimer;
 
+    void Start()
+    {
+        Debug.Log("[GESTURE] GestureDetector script is running");
+    }
+
     public void Pinching(HandLandmarkerResult result)
     {
         if (result.handLandmarks != null && result.handLandmarks.Count > 0)
@@ -35,7 +40,7 @@ public class GestureDetector : MonoBehaviour
 
             if (Vector2.Distance(thumb, index) < 0.01f)
             {
-                Debug.Log("Pinching");
+                Debug.Log("[GESTURE] Pinching");
                 isPinching = true;
             }
             else isPinching = false;
@@ -53,8 +58,11 @@ public class GestureDetector : MonoBehaviour
 
     public void GestureSequenceDetector(HandLandmarkerResult result)
     {
+        
         if(result.handLandmarks == null || result.handLandmarks.Count==0)
+        {
             return;
+        }
         
         var hand = result.handLandmarks[0];
 
@@ -110,13 +118,17 @@ public class GestureDetector : MonoBehaviour
         if(stateCounter<=0)
         {
             gestureSequence = GestureSequence.WaitingForOpen;
-            Debug.Log("Time out!");
+            // Debug.Log("Time out!");
             startTimer = false;
         }
     }
 
     void Update()
     {
+        if(Time.frameCount==500)
+        {
+            Debug.Log("[GESTURE] GestureDetector still running");
+        }
         //Manage sequence timer
         if(!startTimer)
         {
