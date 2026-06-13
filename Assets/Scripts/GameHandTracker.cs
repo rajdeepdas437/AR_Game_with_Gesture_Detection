@@ -3,6 +3,8 @@ using System.Collections;
 using Mediapipe.Tasks.Vision.HandLandmarker;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 {
@@ -16,19 +18,76 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
     //Custom variables -
     [SerializeField] GestureDetector gestureDetector;
+    [SerializeField] ARCameraManager aRCameraManager;
+    private Texture2D arTexture;
+    private bool taskReady=false;
+    private Tasks.Vision.Core.ImageProcessingOptions _imageProcessingOptions;
 
-    private void Awake()
+    private void OnEnable()
     {
-      Debug.Log("[GESTURE] GameHandTracker is awake");
+      if(aRCameraManager != null)
+        aRCameraManager.frameReceived += OnARFrameRecieved;
     }
 
-    private void Update()
+    private void OnDisable()
     {
-      if(Time.frameCount==200)
+      if(aRCameraManager != null)
+        aRCameraManager.frameReceived -= OnARFrameRecieved;      
+        //arCameraManager.frameRecieved is a list, it stores functions to call when a frame arrives. Here, we are adding our OnARFrameRecieved function into that list
+    }
+
+    private void OnARFrameRecieved(ARCameraFrameEventArgs args)
+    {
+      if(!aRCameraManager.TryAcquireLatestCpuImage(out var cpuImage))
       {
-        Debug.Log("[GESTURE] GameHandTracker still running");
+        return;
       }
+
+      if(arTexture == null)
+      {
+        arTexture = new Texture2D(cpuImage.width, cpuImage.height, TextureFormat.RGBA32, false);
+      }
+
+      var conversionParams =
+      new XRCpuImage.ConversionParams
+      {
+          inputRect =
+              new RectInt(
+                  0,
+                  0,
+                  cpuImage.width,
+                  cpuImage.height),
+
+          outputDimensions =
+              new Vector2Int(
+                  cpuImage.width,
+                  cpuImage.height),
+
+          outputFormat =
+              TextureFormat.RGBA32,
+
+          transformation =
+              XRCpuImage.Transformation.None
+      };
+
+      var rawData = arTexture.GetRawTextureData<byte>();
+
+      cpuImage.Convert(conversionParams, rawData);
+
+      var mpImage = new Image(arTexture);
+
+      if(!taskReady)
+      {
+        cpuImage.Dispose();
+        return;
+      }
+
+      taskApi.DetectAsync(mpImage, GetCurrentTimestampMillisec(), _imageProcessingOptions);
+
+      cpuImage.Dispose();
+      arTexture.Apply();
     }
+
 
     public override void Stop()
     {
@@ -53,6 +112,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
       var options = config.GetHandLandmarkerOptions(config.RunningMode == Tasks.Vision.Core.RunningMode.LIVE_STREAM ? OnHandLandmarkDetectionOutput : null);
       taskApi = HandLandmarker.CreateFromOptions(options, GpuManager.GpuResources);
+      taskReady=true;
       var imageSource = ImageSourceProvider.ImageSource;
 
       yield return imageSource.Play();
@@ -75,7 +135,8 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
       var transformationOptions = imageSource.GetTransformationOptions();
       var flipHorizontally = transformationOptions.flipHorizontally;
       var flipVertically = transformationOptions.flipVertically;
-      var imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: (int)transformationOptions.rotationAngle);
+      // var imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: (int)transformationOptions.rotationAngle);
+      _imageProcessingOptions = new Tasks.Vision.Core.ImageProcessingOptions(rotationDegrees: (int)transformationOptions.rotationAngle);
 
       AsyncGPUReadbackRequest req = default;
       var waitUntilReqDone = new WaitUntil(() => req.done);
@@ -88,83 +149,82 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
       Debug.Log("[GESTURE] About to enter detection loop");
 
-      while (true)
-      {
-        if (isPaused)
-        {
-          yield return new WaitWhile(() => isPaused);
-        }
+      // while (true)
+      // {
+      //   if (isPaused)
+      //   {
+      //     yield return new WaitWhile(() => isPaused);
+      //   }
 
-        if (!_textureFramePool.TryGetTextureFrame(out var textureFrame))
-        {
-          yield return new WaitForEndOfFrame();
-          continue;
-        }
+      //   if (!_textureFramePool.TryGetTextureFrame(out var textureFrame))
+      //   {
+      //     yield return new WaitForEndOfFrame();
+      //     continue;
+      //   }
 
-        // Build the input Image
-        Image image;
-        switch (config.ImageReadMode)
-        {
-          case ImageReadMode.GPU:
-            if (!canUseGpuImage)
-            {
-              throw new System.Exception("ImageReadMode.GPU is not supported");
-            }
-            textureFrame.ReadTextureOnGPU(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
-            image = textureFrame.BuildGPUImage(glContext);
-            // TODO: Currently we wait here for one frame to make sure the texture is fully copied to the TextureFrame before sending it to MediaPipe.
-            // This usually works but is not guaranteed. Find a proper way to do this. See: https://github.com/homuler/MediaPipeUnityPlugin/pull/1311
-            yield return waitForEndOfFrame;
-            break;
-          case ImageReadMode.CPU:
-            yield return waitForEndOfFrame;
-            textureFrame.ReadTextureOnCPU(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
-            image = textureFrame.BuildCPUImage();
-            textureFrame.Release();
-            break;
-          case ImageReadMode.CPUAsync:
-          default:
-            req = textureFrame.ReadTextureAsync(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
-            yield return waitUntilReqDone;
+      //   // Build the input Image
+      //   Image image;
+      //   switch (config.ImageReadMode)
+      //   {
+      //     case ImageReadMode.GPU:
+      //       if (!canUseGpuImage)
+      //       {
+      //         throw new System.Exception("ImageReadMode.GPU is not supported");
+      //       }
+      //       textureFrame.ReadTextureOnGPU(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
+      //       image = textureFrame.BuildGPUImage(glContext);
+      //       // TODO: Currently we wait here for one frame to make sure the texture is fully copied to the TextureFrame before sending it to MediaPipe.
+      //       // This usually works but is not guaranteed. Find a proper way to do this. See: https://github.com/homuler/MediaPipeUnityPlugin/pull/1311
+      //       yield return waitForEndOfFrame;
+      //       break;
+      //     case ImageReadMode.CPU:
+      //       yield return waitForEndOfFrame;
+      //       textureFrame.ReadTextureOnCPU(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
+      //       image = textureFrame.BuildCPUImage();
+      //       textureFrame.Release();
+      //       break;
+      //     case ImageReadMode.CPUAsync:
+      //     default:
+      //       req = textureFrame.ReadTextureAsync(imageSource.GetCurrentTexture(), flipHorizontally, flipVertically);
+      //       yield return waitUntilReqDone;
 
-            if (req.hasError)
-            {
-              Debug.LogWarning($"Failed to read texture from the image source");
-              continue;
-            }
-            image = textureFrame.BuildCPUImage();
-            textureFrame.Release();
-            break;
-        }
+      //       if (req.hasError)
+      //       {
+      //         Debug.LogWarning($"Failed to read texture from the image source");
+      //         continue;
+      //       }
+      //       image = textureFrame.BuildCPUImage();
+      //       textureFrame.Release();
+      //       break;
+      //   }
 
-        switch (taskApi.runningMode)
-        {
-          case Tasks.Vision.Core.RunningMode.IMAGE:
-            if (taskApi.TryDetect(image, imageProcessingOptions, ref result))
-            {
-              _handLandmarkerResultAnnotationController.DrawNow(result);
-            }
-            else
-            {
-              _handLandmarkerResultAnnotationController.DrawNow(default);
-            }
-            break;
-          case Tasks.Vision.Core.RunningMode.VIDEO:
-            if (taskApi.TryDetectForVideo(image, GetCurrentTimestampMillisec(), imageProcessingOptions, ref result))
-            {
-              _handLandmarkerResultAnnotationController.DrawNow(result);
-            }
-            else
-            {
-              _handLandmarkerResultAnnotationController.DrawNow(default);
-            }
-            break;
-          case Tasks.Vision.Core.RunningMode.LIVE_STREAM:
-            Debug.Log("[GESTURE] Sending frames to mediapipe");
-            taskApi.DetectAsync(image, GetCurrentTimestampMillisec(), imageProcessingOptions);
-            break;
-        }
-      }
+      //   switch (taskApi.runningMode)
+      //   {
+      //     case Tasks.Vision.Core.RunningMode.IMAGE:
+      //       if (taskApi.TryDetect(image, imageProcessingOptions, ref result))
+      //       {
+      //         _handLandmarkerResultAnnotationController.DrawNow(result);
+      //       }
+      //       else
+      //       {
+      //         _handLandmarkerResultAnnotationController.DrawNow(default);
+      //       }
+      //       break;
+      //     case Tasks.Vision.Core.RunningMode.VIDEO:
+      //       if (taskApi.TryDetectForVideo(image, GetCurrentTimestampMillisec(), imageProcessingOptions, ref result))
+      //       {
+      //         _handLandmarkerResultAnnotationController.DrawNow(result);
+      //       }
+      //       else
+      //       {
+      //         _handLandmarkerResultAnnotationController.DrawNow(default);
+      //       }
+      //       break;
+      //     case Tasks.Vision.Core.RunningMode.LIVE_STREAM:
+      //       taskApi.DetectAsync(image, GetCurrentTimestampMillisec(), imageProcessingOptions);
+      //       break;
+      //   }
+      // }
     }
 
     //Custom Gesture detection logic :-
@@ -178,16 +238,16 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
 
     private void OnHandLandmarkDetectionOutput(HandLandmarkerResult result, Image image, long timestamp)
     {
-      if (result.handLandmarks == null)
-      {
-          Debug.Log("[GESTURE] handLandmarks is NULL");
-      }
-      else
-      {
-          Debug.Log("[GESTURE] handLandmarks count = " + result.handLandmarks.Count);
-      }
+      // if (result.handLandmarks == null)
+      // {
+      //     Debug.Log("[GESTURE] handLandmarks is NULL");
+      // }
+      // else
+      // {
+      //     Debug.Log("[GESTURE] handLandmarks count = " + result.handLandmarks.Count);
+      // }
 
-      Debug.Log($"[GESTURE] Image size = {image.Width()} x {image.Height()}");
+      // Debug.Log($"[GESTURE] Image size = {image.Width()} x {image.Height()}");
       
       DetectGestures(result);
       _handLandmarkerResultAnnotationController.DrawLater(result);
