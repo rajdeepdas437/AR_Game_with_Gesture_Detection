@@ -5,15 +5,16 @@ TagManager:
   serializedVersion: 2
   tags:
   - Global Resource
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PlayerProjectile
   - Water
   - UI
-  - 
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

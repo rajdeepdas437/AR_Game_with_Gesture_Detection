@@ -9,10 +9,18 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
     public Slider specialAttackSlider;
     public TextMeshProUGUI specialAttackText;
+    private GameObject deathScreen;
+    public Slider healthSlider;
 
-    void Start()
+    void Awake()
     {
         instance=this;
+        deathScreen=transform.Find("DeathScreen").gameObject;
+    }
+
+    public void StartDeathScreen()
+    {
+        deathScreen.SetActive(true);
     }
 
 
