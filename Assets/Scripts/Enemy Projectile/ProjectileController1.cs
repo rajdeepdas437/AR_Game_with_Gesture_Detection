@@ -27,6 +27,7 @@ public class ProjectileController1 : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
+            Debug.Log("Fireball hit");
             other.GetComponent<ARPlayerHealthManager>().TakeDamage(damage);
             Destroy(projectilePrefab);
         }
