@@ -9,6 +9,7 @@ public class ProjectileController1 : MonoBehaviour
     private Rigidbody rb;
     [SerializeField] float projectileSpeed=5f;
     [SerializeField] int damage=20;
+    [SerializeField] GameObject projectilePrefab;
 
     void Start()
     {
@@ -27,7 +28,7 @@ public class ProjectileController1 : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             other.GetComponent<ARPlayerHealthManager>().TakeDamage(damage);
-            Destroy(gameObject);
+            Destroy(projectilePrefab);
         }
     }
 }
