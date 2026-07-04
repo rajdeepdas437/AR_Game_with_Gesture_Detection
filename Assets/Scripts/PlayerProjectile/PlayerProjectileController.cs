@@ -10,7 +10,7 @@ public class PlayerProjectileController : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyController>().DamageEnemy(damage);
+            other.GetComponentInParent<EnemyController>().DamageEnemy(damage);
         }
         Destroy(gameObject);
     }

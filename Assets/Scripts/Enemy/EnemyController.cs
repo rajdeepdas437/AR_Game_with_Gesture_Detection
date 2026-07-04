@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -16,6 +17,11 @@ public class EnemyController : MonoBehaviour
     private bool canThrow;
     [SerializeField] int enemyMaxHealth = 100;
     [SerializeField] int enemyCurrentHealth;
+
+    [SerializeField] Transform Armature;
+    private float YRotAngle, z, x;
+    [SerializeField] Transform firePoint;
+    [SerializeField] GameObject enemyPrefab;
 
     void Start()
     {
@@ -41,13 +47,19 @@ public class EnemyController : MonoBehaviour
         moveDirection.Normalize();
         rb.velocity = moveDirection*enemySpeed;
 
+        z = player.position.z - transform.position.z;
+        x = player.position.x - transform.position.x;
+        YRotAngle = Mathf.Atan2(z, x)*Mathf.Rad2Deg;
+
+        Armature.transform.rotation = Quaternion.Euler(-90f, Armature.transform.position.y - YRotAngle, 90f);
+ 
         
     }
 
     IEnumerator ThrowProjectile()
     {
         canThrow=false;
-        Instantiate(projectile, transform.Find("firePoint"));
+        Instantiate(projectile, firePoint);
         yield return new WaitForSeconds(attackCooldown);
         canThrow=true;
     }
@@ -57,7 +69,7 @@ public class EnemyController : MonoBehaviour
         enemyCurrentHealth -= damage;
         if(enemyCurrentHealth<=0)
         {
-            Destroy(gameObject);
+            Destroy(enemyPrefab);
         }
     }
 }

@@ -151,7 +151,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 3
   attackRange: 6
-  attackCooldown: 3
+  attackCooldown: 4
   projectile: {fileID: 7825865800207162113, guid: 162bebe1f1706224e8d6d6c53d952f38, type: 3}
   enemyMaxHealth: 100
   enemyCurrentHealth: 0

@@ -1,0 +1,156 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4113084571842109492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 685415997537312975}
+  m_Layer: 0
+  m_Name: DragonEnemy_prefab
+  m_TagString: Enemy
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &685415997537312975
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4113084571842109492}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7243887915098490924}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2806069561612718036
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 685415997537312975}
+    m_Modifications:
+    - target: {fileID: 166138480731687446, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: Armature
+      value: 
+      objectReference: {fileID: 7243887915098491298}
+    - target: {fileID: 166138480731687446, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: firePoint
+      value: 
+      objectReference: {fileID: 780735029950260499}
+    - target: {fileID: 166138480731687446, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: enemyPrefab
+      value: 
+      objectReference: {fileID: 4113084571842109492}
+    - target: {fileID: 4789117284977285718, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977286104, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_Name
+      value: DragonEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977286104, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6395925337979943279, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4789117284977285718, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3546714136755588453}
+  m_SourcePrefab: {fileID: 100100000, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+--- !u!4 &780735029950260499 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3180829112555399879, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+  m_PrefabInstance: {fileID: 2806069561612718036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7243887915098490924 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4789117284977641464, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+  m_PrefabInstance: {fileID: 2806069561612718036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7243887915098491298 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4789117284977641078, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+  m_PrefabInstance: {fileID: 2806069561612718036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7243887915098920322 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4789117284977285718, guid: 4075f23be9a37ca4bb9638e38eaca3d3, type: 3}
+  m_PrefabInstance: {fileID: 2806069561612718036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &3546714136755588453
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7243887915098920322}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.39, y: 0.6, z: 0.6}
+  m_Center: {x: 0, y: 0, z: 0.3}
