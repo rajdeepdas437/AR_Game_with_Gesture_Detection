@@ -77,10 +77,16 @@ public class GestureDetector : MonoBehaviour
         
         var hand = result.handLandmarks[0];
 
+        var thumb = new UnityEngine.Vector2(hand.landmarks[4].x, hand.landmarks[4].y);
+        var middle = new UnityEngine.Vector2(hand.landmarks[10].x, hand.landmarks[10].y);
+        var ring = new UnityEngine.Vector2(hand.landmarks[14].x, hand.landmarks[14].y);
+        
+
         isRockSign = hand.landmarks[6].y > hand.landmarks[8].y &&
         hand.landmarks[18].y > hand.landmarks[20].y &&
         hand.landmarks[12].y > hand.landmarks[10].y &&
-        hand.landmarks[16].y > hand.landmarks[14].y;
+        hand.landmarks[16].y > hand.landmarks[14].y &&
+        (UnityEngine.Vector2.Distance(thumb, (middle + ring)*0.5f)<0.1f);
     }
 
     public void HealSign(HandLandmarkerResult result)
