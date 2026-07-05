@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 6372704616481903680}
   - component: {fileID: 8246619260199312214}
   - component: {fileID: 653167959972681466}
-  - component: {fileID: 8493264113418198768}
   - component: {fileID: 5961317821661986030}
+  - component: {fileID: 3821199767075695601}
+  - component: {fileID: 6114425728966755049}
   m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
@@ -85,27 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8493264113418198768
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 516749395551580089}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5961317821661986030
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -133,6 +113,41 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3821199767075695601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516749395551580089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 992e10c44efd7e8439cc28889c78a8cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 20
+  QiAmount: 20
+--- !u!65 &6114425728966755049
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516749395551580089}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3069681312856495989
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +157,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2703384161544205463}
-  - component: {fileID: -6606678943075201517}
   m_Layer: 3
   m_Name: Parent_prefab
   m_TagString: Untagged
@@ -166,16 +180,3 @@ Transform:
   - {fileID: 6372704616481903680}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6606678943075201517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3069681312856495989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 992e10c44efd7e8439cc28889c78a8cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 20

@@ -4,6 +4,8 @@ using Mediapipe.Unity.Sample.HandLandmarkDetection;
 using Mediapipe.Tasks.Vision.HandLandmarker;
 using UnityEngine;
 using Mediapipe;
+using System.Numerics;
+using Unity.VisualScripting;
 
 public class GestureDetector : MonoBehaviour
 {
@@ -24,6 +26,7 @@ public class GestureDetector : MonoBehaviour
 
     public bool isPointing;
     public bool isRockSign;
+    public bool isHealSign;
 
     void Start()
     {
@@ -78,8 +81,23 @@ public class GestureDetector : MonoBehaviour
         hand.landmarks[18].y > hand.landmarks[20].y &&
         hand.landmarks[12].y > hand.landmarks[10].y &&
         hand.landmarks[16].y > hand.landmarks[14].y;
+    }
 
+    public void HealSign(HandLandmarkerResult result)
+    {
+        if(result.handLandmarks == null)
+            return;
+        
+        var hand = result.handLandmarks[0];
 
+        var thumb = new UnityEngine.Vector2(hand.landmarks[4].x, hand.landmarks[4].y);
+        var ring = new UnityEngine.Vector2(hand.landmarks[14].x, hand.landmarks[14].y);
+
+        isHealSign = hand.landmarks[8].y < hand.landmarks[6].y &&
+        hand.landmarks[12].y < hand.landmarks[10].y &&
+        hand.landmarks[16].y > hand.landmarks[14].y &&
+        hand.landmarks[20].y > hand.landmarks[18].y &&
+        (UnityEngine.Vector2.Distance(thumb, ring)<0.05f);
     }
 
     private enum GestureSequence
@@ -123,7 +141,7 @@ public class GestureDetector : MonoBehaviour
                     {
                         startTimer=true;          //start timer for whole sequence
                         gestureSequence = GestureSequence.WaitingForClose;
-                        Debug.Log("Open Palm detected");
+                        // Debug.Log("Open Palm detected");
                     }
 
                     break;
@@ -133,7 +151,7 @@ public class GestureDetector : MonoBehaviour
                     if(isPalmClosed)
                     {
                         gestureSequence = GestureSequence.WaitingForOpenAgain;
-                        Debug.Log("Close Palm detected");
+                        // Debug.Log("Close Palm detected");
                     }
 
                     break;
@@ -147,7 +165,7 @@ public class GestureDetector : MonoBehaviour
                         canDoSpecialAttack=false;         //start cooldown
                         doFadingAnim=true;
                         gestureSequence = GestureSequence.WaitingForOpen;
-                        Debug.Log("Gesture sequence complete");
+                        // Debug.Log("Gesture sequence complete");
                     }
 
                     break;    
@@ -156,7 +174,7 @@ public class GestureDetector : MonoBehaviour
         if(stateCounter<=0)
         {
             gestureSequence = GestureSequence.WaitingForOpen;
-            Debug.Log("Time out!");
+            // Debug.Log("Time out!");
             startTimer = false;
         }
     }

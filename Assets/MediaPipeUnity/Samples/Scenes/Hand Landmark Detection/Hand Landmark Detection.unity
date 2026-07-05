@@ -670,6 +670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  qi: 0
 --- !u!1 &869823895
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,6 +890,7 @@ MonoBehaviour:
   Sphere: {fileID: 4212261235916312682, guid: eedeff4e108d51b4aa99e1aa4766bbe7, type: 3}
   arCamera: {fileID: 633282278}
   Cooldown: 2
+  aRPlayerHealthManager: {fileID: 633282281}
 --- !u!114 &983948468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -907,6 +909,7 @@ MonoBehaviour:
   SpecialAttakCooldown: 5
   isPointing: 0
   isRockSign: 0
+  isHealSign: 0
 --- !u!114 &983948469
 MonoBehaviour:
   m_ObjectHideFlags: 0

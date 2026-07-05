@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 607595893549178655}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: sphere_prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,3 +179,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 100
+  QiAmount: 0

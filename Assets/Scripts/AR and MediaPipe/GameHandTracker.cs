@@ -232,6 +232,7 @@ namespace Mediapipe.Unity.Sample.HandLandmarkDetection
     {
       gestureDetector.RockSign(result);
       gestureDetector.GestureSequenceDetector(result);
+      gestureDetector.HealSign(result);
     }
 
     
