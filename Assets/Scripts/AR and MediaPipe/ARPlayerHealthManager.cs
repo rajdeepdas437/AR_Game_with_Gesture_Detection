@@ -7,11 +7,18 @@ public class ARPlayerHealthManager : MonoBehaviour
     [SerializeField] int maxHealth=100;
     [SerializeField] int currentHealth;
     [SerializeField] int qi;
+    private int maxQi = 100;
     void Start()
     {
         currentHealth=maxHealth;
         UIManager.instance.healthSlider.maxValue = maxHealth;
         UIManager.instance.healthSlider.value = currentHealth;
+
+
+        UIManager.instance.mainQiSlider.maxValue = 100;
+        UIManager.instance.easeQiSlider.maxValue = 100;
+        UIManager.instance.mainQiSlider.value = qi;
+        UIManager.instance.easeQiSlider.value = qi;
     }
 
     public void TakeDamage(int damage)
@@ -42,6 +49,8 @@ public class ARPlayerHealthManager : MonoBehaviour
         {
             qi=100;
         }
+        UIManager.instance.mainQiSlider.value = qi;
+        UIManager.instance.easeQiSlider.value = qi;
     }
 
     public void QiToHP()
@@ -52,5 +61,10 @@ public class ARPlayerHealthManager : MonoBehaviour
             Heal(20);
         }
         else return;
+    }
+
+    public int CurrentQi()
+    {
+        return qi;
     }
 }

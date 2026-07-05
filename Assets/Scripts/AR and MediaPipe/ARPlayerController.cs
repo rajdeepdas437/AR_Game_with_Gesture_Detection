@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mediapipe.Unity.Sample.HandLandmarkDetection;
@@ -12,9 +13,11 @@ public class ARPlayerController : MonoBehaviour
     private GestureDetector gestureDetector;
     private bool canInstantiateCube;
     [SerializeField] float Cooldown = 2f;
-    private float healTimer=2f;
-    private float healCounter;
+    private float healCooldown=1f;
+    private float healDuration=2f;
     [SerializeField] ARPlayerHealthManager aRPlayerHealthManager;
+    private bool canHeal=true;
+    private float elapsedTime;
     void Start()
     {
         canInstantiateCube = true;
@@ -34,19 +37,24 @@ public class ARPlayerController : MonoBehaviour
 
 
         // heal mechanic
-        if(gestureDetector.isHealSign)
+        if(gestureDetector.isHealSign && canHeal && elapsedTime < healDuration)
         {
-            healCounter += Time.deltaTime;
-            if(healCounter>=healTimer)
+            Debug.Log("Healing");
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime/healDuration;
+            UIManager.instance.easeQiSlider.value = Mathf.Lerp(aRPlayerHealthManager.CurrentQi(), aRPlayerHealthManager.CurrentQi()-20, t);
+            UIManager.instance.mainQiSlider.value = aRPlayerHealthManager.CurrentQi()-20;
+            Debug.Log("easeQiSlider value = " + UIManager.instance.easeQiSlider.value);
+            if(UIManager.instance.easeQiSlider.value == aRPlayerHealthManager.CurrentQi()-20)
             {
-                healCounter = 0f;
+                Debug.Log("Healed");
+                elapsedTime=0f;
                 aRPlayerHealthManager.QiToHP();
+                StartCoroutine(HealCooldown());
             }
         }
-        else
-        {
-            healCounter=0f;
-        }
+        
+        
         
     }
 
@@ -68,6 +76,13 @@ public class ARPlayerController : MonoBehaviour
         GameObject spawnedSphere = Instantiate(Sphere, ray.origin, arCamera.transform.rotation);
         spawnedSphere.GetComponentInChildren<Rigidbody>().velocity=ray.direction*10f;
         yield return new WaitForSeconds(Cooldown);
+    }
+
+    IEnumerator HealCooldown()
+    {
+        canHeal = false;
+        yield return new WaitForSeconds(healCooldown);
+        canHeal = true;
     }
 
 

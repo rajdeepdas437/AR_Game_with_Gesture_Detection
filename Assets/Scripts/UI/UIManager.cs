@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI specialAttackText;
     private GameObject deathScreen;
     public Slider healthSlider;
+    public Slider mainQiSlider;
+    public Slider easeQiSlider;
 
     void Awake()
     {

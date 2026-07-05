@@ -97,7 +97,7 @@ public class GestureDetector : MonoBehaviour
         hand.landmarks[12].y < hand.landmarks[10].y &&
         hand.landmarks[16].y > hand.landmarks[14].y &&
         hand.landmarks[20].y > hand.landmarks[18].y &&
-        (UnityEngine.Vector2.Distance(thumb, ring)<0.05f);
+        (UnityEngine.Vector2.Distance(thumb, ring)<0.1f);
     }
 
     private enum GestureSequence
